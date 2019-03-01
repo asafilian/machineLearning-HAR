@@ -191,3 +191,15 @@ This is a good mixture of simple linear (LDA), nonlinear (CART, kNN) and complex
 set.seed(123)
 fit.lda <- train(classe~., data=train.proc.pca, method="lda", metric=metric, trControl=control)
 ```
+
+```{r cart, cache=TRUE}
+# CART: nonlinear
+set.seed(123)
+fit.cart <- train(classe~., data=train.proc.pca, method="rpart", metric=metric, trControl=control)
+```
+
+```{r knn, cache=TRUE}
+# kNN
+set.seed(123)
+fit.knn <- train(classe~., data=train.proc.pca, method="knn", metric=metric, trControl=control)
+```

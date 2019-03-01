@@ -333,6 +333,12 @@ metric &lt;- &quot;Accuracy&quot;</code></pre>
 <pre class="r"><code># LDA: linear
 set.seed(123)
 fit.lda &lt;- train(classe~., data=train.proc.pca, method=&quot;lda&quot;, metric=metric, trControl=control)</code></pre>
+<pre class="r"><code># CART: nonlinear
+set.seed(123)
+fit.cart &lt;- train(classe~., data=train.proc.pca, method=&quot;rpart&quot;, metric=metric, trControl=control)</code></pre>
+<pre class="r"><code># kNN
+set.seed(123)
+fit.knn &lt;- train(classe~., data=train.proc.pca, method=&quot;knn&quot;, metric=metric, trControl=control)</code></pre>
 </div>
 <div class="footnotes">
 <hr />
