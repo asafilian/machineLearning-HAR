@@ -330,6 +330,9 @@ metric &lt;- &quot;Accuracy&quot;</code></pre>
 <li>Random Forests</li>
 </ul>
 <p>This is a good mixture of simple linear (LDA), nonlinear (CART, kNN) and complex nonlinear methods (SVM, RF). We reset the random number seed to ensure that the evaluation of each algorithm is performed using exactly the same data splits.</p>
+<pre class="r"><code># LDA: linear
+set.seed(123)
+fit.lda &lt;- train(classe~., data=train.proc.pca, method=&quot;lda&quot;, metric=metric, trControl=control)</code></pre>
 </div>
 <div class="footnotes">
 <hr />

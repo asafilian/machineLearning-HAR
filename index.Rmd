@@ -185,3 +185,9 @@ We are going to evaluate five different algorithms, including
 - Random Forests 
 
 This is a good mixture of simple linear (LDA), nonlinear (CART, kNN) and complex nonlinear methods (SVM, RF). We reset the random number seed to ensure that the evaluation of each algorithm is performed using exactly the same data splits.
+
+```{r lda, cache=TRUE}
+# LDA: linear
+set.seed(123)
+fit.lda <- train(classe~., data=train.proc.pca, method="lda", metric=metric, trControl=control)
+```
