@@ -233,3 +233,33 @@ The following plot represents the model evaluation results and compare the sprea
 ```{r models-accuracy}
 dotplot(results)
 ```
+
+We can see that the most accurate models in this case were random forests and KNN. The former is a little bit more accurate than the latter. Let us take a look at the randome forests model:
+
+```{r rf-summary}
+print(fit.rf)
+```
+
+Although, random forests provide us the most accuracte model. However, it may over-fit. To see if this is the case, we are going to predict it on our testing set `test.set`. We first need to preprocess `test.set` based on the preprocessing we got for training set:
+
+```{r preproc-test.set}
+test.set.proc <- test.set %>% select(-c(1, 2))
+test.set.proc <- test.set.proc[, -ids_NA.1]
+stan.data.test <- predict(preObj_stn, test.set.proc[, num_inds.2])
+test.set.proc[, num_inds.2] <- stan.data.test
+test.set.proc <- test.set.proc[, !isN0]
+test.set.proc <- test.set.proc[, -highCorr]
+test.set.proc$classe <- test.set$classe
+test.proc.pca <- predict(preObj_pca, test.set.proc[, -dim(test.set.proc)[2]])
+```
+
+NOW, let's take a look at the confusion matrix:
+```{r confusion}
+pred.test <- predict(fit.rf, test.proc.pca)
+confusionMatrix(pred.test, test.set$classe)
+```
+
+As we see, we got about 98% accuracy, which shows that our random forests model work pretty well. This well represented in the following plot.
+```{r predicted-value-test}
+qplot(classe, pred.test, data = test.set, xlab = "Actual Value", ylab = "Predicted Value", main = "Predicted vs. Actual", geom = "jitter")
+```
