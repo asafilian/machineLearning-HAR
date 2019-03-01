@@ -1,0 +1,57 @@
+---
+title: 'A Predictor for Human Activity Recognition: Weight Lifting Exercises'
+author: "Aliakbar Safilian^[a.a.safilian@gmail.com]"
+date: "March 1, 2019"
+output: 
+        html_document:
+                number_sections: yes
+                fig_caption: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE, comment="")
+```
+
+# Overview
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit, it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. 
+
+In this project, our goal is to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available on http://groupware.les.inf.puc-rio.br/har. The goal of this project is to predict the manner in which they did the exercise. 
+
+The data for this project come from an article written  by W. Ugulino *et al*.^[http://web.archive.org/web/20161224072740/http:/groupware.les.inf.puc-rio.br/har - Ugulino, W.; Cardador, D.; Vega, K.; Velloso, E.; Milidiu, R.; Fuks, H. Wearable Computing: Accelerometers' Data Classification of Body Postures and Movements. Proceedings of 21st Brazilian Symposium on Artificial Intelligence. Advances in Artificial Intelligence - SBIA 2012. In: Lecture Notes in Computer Science. , pp. 52-61. Curitiba, PR: Springer Berlin / Heidelberg, 2012. ISBN 978-3-642-34458-9. DOI: 10.1007/978-3-642-34459-6_6]. In [Sect. 2](#sec-data), we split the data into training and testing datasets. Then, we take a look at the output variable. 
+
+We do some pre-processing on our tarining set in [Sect. 3](#sec-preproc). This includes removing some harmful variables, dealing with missing values, standardization data (Gaussian distribution), excluding the variables with high correlations, and applying principal component analysis (PCA) on the data.
+
+[Sect. 4](#sec-models) is dedicated to building some reasonable model(s), including *linear discriminant analysis*, *classification trees*, *k-nearest neighbors*, *support vector machines with a non-linear kernel*, and *random forests*. We use 10-fold crossvalidation to estimate the accuracy of our models. The most accurate models that we get in this case are random forests and k-nearest neighbotes. The former is a little bit more accurate than the latter. We finally test our model on our testing dataset. The result is promissing. 
+
+
+# Data {#sec-data}
+```{r, echo=FALSE}
+library(caret)
+library(ggplot2)
+library(RANN)
+library(dplyr)
+library(corrplot)
+```
+
+In the following, we load our data, and we split it into two sets, `train.set` and `test.set`. We will build our models on `train.set`, and we will test whether it overfits or not on `test.set`.
+
+```{r getdata, cache=TRUE}
+dataset <- read.csv(url("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"), header=T, na.strings=c("","NA"))
+dim(dataset)
+```
+
+```{r split}
+set.seed(2)
+inTrain <- createDataPartition(dataset$classe, p = 0.7, list = FALSE)
+train.set <- dataset[inTrain, ]
+test.set <- dataset[-inTrain, ]
+dim(test.set)
+dim(train.set) 
+```
+
+As we see, the dataset has ``r dim(train.set)[2]`` variables. The output of our predictors is the `classe` variable in our dataset, which is a categorical variable with the following levels: ``r levels(train.set$classe)``.  Now, let's take a look at the `classe` (the output) variable:
+
+```{r perc-classe}
+percentage <- prop.table(table(train.set$classe)) * 100
+cbind(freq=table(train.set$classe), percentage=round(percentage, 2))
+```
