@@ -315,6 +315,22 @@ cbind(freq=table(dataset$cvtd_timestamp), percentage=round(percentage, 2))</code
 30/11/2011 17:11 1440       7.53
 30/11/2011 17:12 1093       5.61</code></pre>
 </div>
+<div id="sec-models" class="section level1">
+<h1><span class="header-section-number">4</span> Building Models</h1>
+<p>Now, it is time to build our model. In this section, we are going to get a reasonable model. To this end, we will try several models.</p>
+<p>We are going to use <em>10-fold crossvalidation</em> to estimate the accuracy of our models.<a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a> Moreover, we define a variable <code>metric</code> and set it to <code>Accuracy</code>. This will be the meric to evaluate models.</p>
+<pre class="r"><code>control &lt;- trainControl(method=&quot;cv&quot;, number=10)
+metric &lt;- &quot;Accuracy&quot;</code></pre>
+<p>We are going to evaluate five different algorithms, including</p>
+<ul>
+<li>Linear Discriminant Analysis</li>
+<li>Classification Trees</li>
+<li>k-Nearest Neighbors</li>
+<li>Support Vector Machines (SVM) with a non-linear kernel</li>
+<li>Random Forests</li>
+</ul>
+<p>This is a good mixture of simple linear (LDA), nonlinear (CART, kNN) and complex nonlinear methods (SVM, RF). We reset the random number seed to ensure that the evaluation of each algorithm is performed using exactly the same data splits.</p>
+</div>
 <div class="footnotes">
 <hr />
 <ol>
@@ -322,6 +338,7 @@ cbind(freq=table(dataset$cvtd_timestamp), percentage=round(percentage, 2))</code
 <li id="fn2"><p><a href="http://web.archive.org/web/20161224072740/http:/groupware.les.inf.puc-rio.br/har" class="uri">http://web.archive.org/web/20161224072740/http:/groupware.les.inf.puc-rio.br/har</a> - Ugulino, W.; Cardador, D.; Vega, K.; Velloso, E.; Milidiu, R.; Fuks, H. Wearable Computing: Accelerometers’ Data Classification of Body Postures and Movements. Proceedings of 21st Brazilian Symposium on Artificial Intelligence. Advances in Artificial Intelligence - SBIA 2012. In: Lecture Notes in Computer Science. , pp. 52-61. Curitiba, PR: Springer Berlin / Heidelberg, 2012. ISBN 978-3-642-34458-9. DOI: 10.1007/978-3-642-34459-6_6<a href="#fnref2">↩</a></p></li>
 <li id="fn3"><p>The <code>YeoJohnson</code> method make the data look more normal. We could use the Box-Cox method, but the <code>Box-Cox</code> method does not work when you have negative values.<a href="#fnref3">↩</a></p></li>
 <li id="fn4"><p>A cutoff for the cumulative percent of variance to be retained by PCA<a href="#fnref4">↩</a></p></li>
+<li id="fn5"><p>This will split our dataset into 10 parts, train in 9 and test on 1 and release for all combinations of train-test splits.<a href="#fnref5">↩</a></p></li>
 </ol>
 </div>
 
