@@ -1,0 +1,2 @@
+# machineLearning-HAR
+In this project, our goal is to use data from accelerometers on 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available on http://groupware.les.inf.puc-rio.br/har. The goal of this project is to predict the manner in which they did the exercise. This project was submitted as the final assingment for Practical Machine Learning course on Coursera.
