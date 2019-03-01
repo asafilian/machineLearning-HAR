@@ -209,3 +209,27 @@ fit.knn <- train(classe~., data=train.proc.pca, method="knn", metric=metric, trC
 set.seed(123)
 fit.svm <- train(classe~., data=train.proc.pca, method="svmRadial", metric=metric, trControl=control)
 ```
+
+```{r rf, cache=TRUE}
+# Random Forest: advanced
+set.seed(123)
+fit.rf <- train(classe~., data=train.proc.pca, method="rf", metric=metric, trControl=control)
+```
+
+Now, we need to compare the models and select the most accurate one. In the following we see the summary of the above models:
+
+```{r models}
+# summarize accuracy of models
+results <- resamples(list(lda=fit.lda, 
+                          cart=fit.cart, 
+                          knn=fit.knn, 
+                          svm=fit.svm, 
+                          rf=fit.rf))
+summary(results)
+```
+
+The following plot represents the model evaluation results and compare the spread and the mean accuracy of each model. Sine each algorithm was evaluated 10 times (10 fold cross validation), there is a population of accuracy measures for each algorithm.   
+
+```{r models-accuracy}
+dotplot(results)
+```
