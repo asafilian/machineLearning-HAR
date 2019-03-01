@@ -339,6 +339,9 @@ fit.cart &lt;- train(classe~., data=train.proc.pca, method=&quot;rpart&quot;, me
 <pre class="r"><code># kNN
 set.seed(123)
 fit.knn &lt;- train(classe~., data=train.proc.pca, method=&quot;knn&quot;, metric=metric, trControl=control)</code></pre>
+<pre class="r"><code># SVM: advanced
+set.seed(123)
+fit.svm &lt;- train(classe~., data=train.proc.pca, method=&quot;svmRadial&quot;, metric=metric, trControl=control)</code></pre>
 </div>
 <div class="footnotes">
 <hr />

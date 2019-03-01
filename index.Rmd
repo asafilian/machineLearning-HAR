@@ -203,3 +203,9 @@ fit.cart <- train(classe~., data=train.proc.pca, method="rpart", metric=metric, 
 set.seed(123)
 fit.knn <- train(classe~., data=train.proc.pca, method="knn", metric=metric, trControl=control)
 ```
+
+```{r svm, cache=TRUE}
+# SVM: advanced
+set.seed(123)
+fit.svm <- train(classe~., data=train.proc.pca, method="svmRadial", metric=metric, trControl=control)
+```
